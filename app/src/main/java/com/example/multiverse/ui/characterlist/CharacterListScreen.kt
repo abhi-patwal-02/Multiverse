@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +36,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
@@ -49,6 +53,13 @@ fun CharacterListScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val status by viewModel.status.collectAsState()
     val gender by viewModel.gender.collectAsState()
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(searchQuery, status, gender) {
+        listState.scrollToItem(0)
+    }
 
     Column(
         modifier = Modifier
@@ -231,81 +242,90 @@ fun CharacterListScreen(
 
                 } else {
 
-                    // Character list
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        items(
-                            count = characters.itemCount
-                        ) { index ->
-
-                            val character = characters[index]
-
-                            if (character != null) {
-
-                                CharacterCard(
-                                    character = character,
-                                    onClick = {
-                                        // Navigation will be added later
-                                    }
-                                )
-                            }
+                    PullToRefreshBox(
+                        isRefreshing = characters.loadState.refresh is LoadState.Loading,
+                        onRefresh = {
+                            characters.refresh()
                         }
+                    ){
+                        // Character list
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
 
-                        // Next page state
-                        when (characters.loadState.append) {
+                            items(
+                                count = characters.itemCount
+                            ) { index ->
 
-                            is LoadState.Loading -> {
+                                val character = characters[index]
 
-                                item {
+                                if (character != null) {
 
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        CircularProgressIndicator()
-                                    }
+                                    CharacterCard(
+                                        character = character,
+                                        onClick = {
+                                            // Navigation will be added later
+                                        }
+                                    )
                                 }
                             }
 
-                            is LoadState.Error -> {
+                            // Next page state
+                            when (characters.loadState.append) {
 
-                                item {
+                                is LoadState.Loading -> {
 
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                        horizontalAlignment =
-                                            Alignment.CenterHorizontally
-                                    ) {
+                                    item {
 
-                                        Text(
-                                            text = "Couldn't load more characters"
-                                        )
-
-                                        Spacer(
-                                            modifier = Modifier.height(8.dp)
-                                        )
-
-                                        Button(
-                                            onClick = {
-                                                characters.retry()
-                                            }
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.Center
                                         ) {
-                                            Text("Retry")
+                                            CircularProgressIndicator()
                                         }
                                     }
                                 }
-                            }
 
-                            is LoadState.NotLoading -> Unit
+                                is LoadState.Error -> {
+
+                                    item {
+
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            horizontalAlignment =
+                                                Alignment.CenterHorizontally
+                                        ) {
+
+                                            Text(
+                                                text = "Couldn't load more characters"
+                                            )
+
+                                            Spacer(
+                                                modifier = Modifier.height(8.dp)
+                                            )
+
+                                            Button(
+                                                onClick = {
+                                                    characters.retry()
+                                                }
+                                            ) {
+                                                Text("Retry")
+                                            }
+                                        }
+                                    }
+                                }
+
+                                is LoadState.NotLoading -> Unit
+                            }
                         }
                     }
+
                 }
             }
         }
