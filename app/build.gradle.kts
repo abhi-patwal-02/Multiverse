@@ -53,4 +53,30 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // Lifecycle / ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.9.4")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+//    // Kotlin Serialization
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+//    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+
+    // Paging
+    implementation("androidx.paging:paging-runtime:3.3.6")
+    implementation("androidx.paging:paging-compose:3.3.6")
+
+    // Coil
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+
+    // Hilt
+//    implementation("com.google.dagger:hilt-android:2.57.2")
+//    kapt("com.google.dagger:hilt-compiler:2.57.2")
+
 }
