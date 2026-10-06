@@ -11,20 +11,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.multiverse.di.AppContainer
+import com.example.multiverse.ui.characterlist.CharacterListScreen
+import com.example.multiverse.ui.characterlist.CharacterListViewModel
+import com.example.multiverse.ui.characterlist.CharacterListViewModelFactory
 import com.example.multiverse.ui.theme.MultiverseTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val appContainer by lazy {
+        AppContainer()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
-            MultiverseTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+
+            val viewModel: CharacterListViewModel =
+                viewModel(
+                    factory = CharacterListViewModelFactory(
+                        appContainer.characterRepository
                     )
-                }
+                )
+
+            MultiverseTheme {
+                CharacterListScreen(
+                    viewModel = viewModel
+                )
             }
         }
     }
