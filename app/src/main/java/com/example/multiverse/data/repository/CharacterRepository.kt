@@ -10,58 +10,19 @@ import com.example.multiverse.domain.model.CharacterModel
 import com.example.multiverse.domain.model.EpisodeModel
 import kotlinx.coroutines.flow.Flow
 
-class CharacterRepository(
-    private val api: RickAndMortyApi
-) {
+interface CharacterRepository {
 
     fun getCharacters(
         name: String?,
         status: String?,
         gender: String?
-    ): Flow<PagingData<CharacterModel>> {
-
-        return Pager(
-            config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
-                CharacterPagingSource(
-                    api = api,
-                    name = name,
-                    status = status,
-                    gender = gender
-                )
-            }
-        ).flow
-    }
+    ): Flow<PagingData<CharacterModel>>
 
     suspend fun getCharacter(
         id: Int
-    ): CharacterModel {
-        return api.getCharacter(id).toDomain()
-    }
+    ): CharacterModel
 
     suspend fun getEpisodes(
         episodeIds: List<Int>
-    ): List<EpisodeModel> {
-
-        if (episodeIds.isEmpty()) {
-            return emptyList()
-        }
-
-        return if (episodeIds.size == 1) {
-
-            listOf(
-                api.getEpisode(episodeIds.first()).toDomain()
-            )
-
-        } else {
-
-            val ids = episodeIds.joinToString(",")
-
-            api.getEpisodes(ids)
-                .map { it.toDomain() }
-        }
-    }
+    ): List<EpisodeModel>
 }

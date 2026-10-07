@@ -92,6 +92,7 @@ fun CharacterListScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFEAEBEC))
             .statusBarsPadding()
             .padding(horizontal = 16.dp)
     ) {
