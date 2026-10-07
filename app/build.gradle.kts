@@ -82,4 +82,9 @@ dependencies {
 //    implementation("com.google.dagger:hilt-android:2.57.2")
 //    kapt("com.google.dagger:hilt-compiler:2.57.2")
 
+
+    // Unit testing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    testImplementation("androidx.paging:paging-common:3.3.6")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
