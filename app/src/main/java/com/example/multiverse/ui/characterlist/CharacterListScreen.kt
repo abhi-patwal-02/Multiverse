@@ -1,5 +1,6 @@
 package com.example.multiverse.ui.characterlist
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -388,6 +389,14 @@ fun CharacterListScreen(
                                 }
 
                                 is LoadState.Error -> {
+//
+//                                    val error = characters.loadState.append as LoadState.Error
+//
+//                                    Log.e(
+//                                        "CharacterPagination",
+//                                        "Failed to load next page",
+//                                        error.error
+//                                    )
                                     item {
                                         ElevatedCard(
                                             modifier = Modifier
