@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.multiverse.di.AppContainer
+import com.example.multiverse.navigation.NavGraph
 import com.example.multiverse.ui.characterlist.CharacterListScreen
 import com.example.multiverse.ui.characterlist.CharacterListViewModel
 import com.example.multiverse.ui.characterlist.CharacterListViewModelFactory
@@ -36,8 +38,11 @@ class MainActivity : ComponentActivity() {
                     )
                 )
 
+            val navController = rememberNavController()
+
             MultiverseTheme {
-                CharacterListScreen(
+                NavGraph(
+                    navController = navController,
                     viewModel = viewModel
                 )
             }
