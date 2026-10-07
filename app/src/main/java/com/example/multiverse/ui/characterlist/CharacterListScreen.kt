@@ -67,6 +67,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.multiverse.domain.model.CharacterModel
 import com.example.multiverse.ui.theme.MultiverseTheme
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
 fun CharacterListScreen(
@@ -82,6 +85,8 @@ fun CharacterListScreen(
 
     val listState = rememberLazyListState()
 
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(searchQuery, status, gender) {
         listState.scrollToItem(0)
     }
@@ -92,6 +97,19 @@ fun CharacterListScreen(
             .background(Color(0xFFEAEBEC))
             .statusBarsPadding()
             .padding(horizontal = 16.dp)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent(
+                            pass = PointerEventPass.Initial
+                        )
+
+                        if (event.changes.any { it.pressed }) {
+                            focusManager.clearFocus()
+                        }
+                    }
+                }
+            }
     ) {
         // App / Screen Header
         Column(
