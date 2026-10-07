@@ -1,6 +1,5 @@
 package com.example.multiverse.data.repository
 
-import com.example.multiverse.data.remote.RetrofitClient
 import com.example.multiverse.data.remote.RickAndMortyApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse

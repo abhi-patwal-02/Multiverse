@@ -1,7 +1,6 @@
-package com.example.multiverse.repository
+package com.example.multiverse.data.repository
 
 import androidx.paging.PagingData
-import com.example.multiverse.data.repository.CharacterRepository
 import com.example.multiverse.domain.model.CharacterModel
 import com.example.multiverse.domain.model.EpisodeModel
 import kotlinx.coroutines.flow.Flow

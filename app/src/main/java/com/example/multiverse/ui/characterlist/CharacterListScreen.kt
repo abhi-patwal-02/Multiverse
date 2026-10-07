@@ -1,6 +1,5 @@
 package com.example.multiverse.ui.characterlist
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -45,7 +43,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -70,7 +67,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.multiverse.domain.model.CharacterModel
 import com.example.multiverse.ui.theme.MultiverseTheme
-import org.intellij.lang.annotations.JdkConstants
 
 @Composable
 fun CharacterListScreen(
@@ -82,7 +78,7 @@ fun CharacterListScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val status by viewModel.status.collectAsState()
     val gender by viewModel.gender.collectAsState()
-    val pullToRefreshState = rememberPullToRefreshState()
+//    val pullToRefreshState = rememberPullToRefreshState()
 
     val listState = rememberLazyListState()
 
@@ -681,19 +677,19 @@ fun StatusBadge(
 
 }
 
-@Composable
-fun StatusIndicator(
-    status: String
-) {
-    val indicatorColor = getStatusColor(status)
-
-    Box(
-        modifier = Modifier
-            .size(10.dp)
-            .clip(CircleShape)
-            .background(indicatorColor)
-    )
-}
+//@Composable
+//fun StatusIndicator(
+//    status: String
+//) {
+//    val indicatorColor = getStatusColor(status)
+//
+//    Box(
+//        modifier = Modifier
+//            .size(10.dp)
+//            .clip(CircleShape)
+//            .background(indicatorColor)
+//    )
+//}
 
 fun getStatusColor(status: String): Color {
     return when (status.lowercase()) {
@@ -703,16 +699,6 @@ fun getStatusColor(status: String): Color {
     }
 }
 
-@Composable
-fun TextTest(){
-    Text(
-        text = "Multiverse",
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.onBackground,
-        fontFamily = FontFamily.Monospace
-    )
-}
 
 @Preview(showBackground = true)
 @Composable

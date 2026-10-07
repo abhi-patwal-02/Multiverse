@@ -1,6 +1,6 @@
 package com.example.multiverse.ui.characterlist
 
-import com.example.multiverse.repository.FakeCharacterRepository
+import com.example.multiverse.data.repository.FakeCharacterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -14,6 +14,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CharacterListViewModelTest {
@@ -45,21 +46,21 @@ class CharacterListViewModelTest {
 
         viewModel.updateSearchQuery("r")
         runCurrent()
-        advanceTimeBy(100)
+        advanceTimeBy(100.milliseconds)
 
         viewModel.updateSearchQuery("ri")
         runCurrent()
-        advanceTimeBy(100)
+        advanceTimeBy(100.milliseconds)
 
         viewModel.updateSearchQuery("ric")
         runCurrent()
-        advanceTimeBy(100)
+        advanceTimeBy(100.milliseconds)
 
         viewModel.updateSearchQuery("rick")
         runCurrent()
 
         // Only 499ms have passed since "rick".
-        advanceTimeBy(499)
+        advanceTimeBy(499.milliseconds)
         runCurrent()
 
         assertEquals(
@@ -68,7 +69,7 @@ class CharacterListViewModelTest {
         )
 
         // Complete the 400ms debounce.
-        advanceTimeBy(1)
+        advanceTimeBy(1.milliseconds)
         runCurrent()
 
         assertEquals(
@@ -100,7 +101,7 @@ class CharacterListViewModelTest {
         viewModel.updateSearchQuery("rick")
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         assertEquals(
@@ -112,7 +113,7 @@ class CharacterListViewModelTest {
         viewModel.updateSearchQuery("rick")
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         // Still only one request.
@@ -145,7 +146,7 @@ class CharacterListViewModelTest {
         viewModel.updateSearchQuery("rick")
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         assertEquals(
@@ -157,7 +158,7 @@ class CharacterListViewModelTest {
         viewModel.updateSearchQuery("")
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         assertEquals(
@@ -169,7 +170,7 @@ class CharacterListViewModelTest {
         viewModel.updateSearchQuery("rick")
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         // Still only two repository calls.
@@ -209,7 +210,7 @@ class CharacterListViewModelTest {
 
         runCurrent()
 
-        advanceTimeBy(500)
+        advanceTimeBy(500.milliseconds)
         runCurrent()
 
         assertEquals(

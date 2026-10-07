@@ -3,7 +3,6 @@ package com.example.multiverse.data.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.multiverse.data.mapper.toDomain
-import com.example.multiverse.data.remote.dto.CharacterDto
 import com.example.multiverse.domain.model.CharacterModel
 import retrofit2.HttpException
 import java.io.IOException
