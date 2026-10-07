@@ -31,19 +31,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val viewModel: CharacterListViewModel =
-                viewModel(
-                    factory = CharacterListViewModelFactory(
-                        appContainer.characterRepository
-                    )
-                )
+
 
             val navController = rememberNavController()
 
             MultiverseTheme {
                 NavGraph(
                     navController = navController,
-                    viewModel = viewModel
+                    repository = appContainer.characterRepository
                 )
             }
         }

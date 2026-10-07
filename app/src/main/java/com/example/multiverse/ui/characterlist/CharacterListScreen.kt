@@ -46,7 +46,8 @@ import com.example.multiverse.domain.model.CharacterModel
 
 @Composable
 fun CharacterListScreen(
-    viewModel: CharacterListViewModel
+    viewModel: CharacterListViewModel,
+    onCharacterClick: (Int) -> Unit
 ) {
     val characters = viewModel.characters.collectAsLazyPagingItems()
 
@@ -65,7 +66,8 @@ fun CharacterListScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 16.dp)
     ) {
 
         // Search
@@ -266,6 +268,7 @@ fun CharacterListScreen(
                                     CharacterCard(
                                         character = character,
                                         onClick = {
+                                            onCharacterClick(character.id)
                                             // Navigation will be added later
                                         }
                                     )
