@@ -91,3 +91,62 @@ The API and repository are provided through a simple application container witho
 ## Time Spent
 
 Approximately **12 hours** were spent on the assignment, including implementation, UI development, testing, debugging, and documentation.
+
+## Testing
+
+### What We Tested
+
+The test suite focuses on the core logic that controls networking, pagination, filtering, search behaviour, and data transformation.
+
+#### CharacterPagingSource
+
+`CharacterPagingSource` is tested using **MockWebServer** and the real Retrofit API interface. MockWebServer allows us to simulate API responses without depending on the live Rick and Morty API.
+
+We test:
+
+- Loading the first page and verifying that characters are returned and the correct next page is provided.
+- Loading the final page and verifying that pagination correctly stops when there is no next page.
+- Handling HTTP errors and returning a `LoadResult.Error`.
+- Verifying that search, status, and gender filters are correctly sent as API query parameters.
+- Verifying that the correct page number is requested during pagination.
+
+#### CharacterListViewModel
+
+The ViewModel is tested using a **fake repository** and Kotlin's coroutine testing utilities.
+
+`StandardTestDispatcher` is used to control coroutine execution and virtual time, allowing the debounce behaviour to be tested deterministically.
+
+We test:
+
+- Rapid search input is debounced so that intermediate values do not immediately trigger repository requests.
+- Entering the same effective search query does not create another request because of `distinctUntilChanged()`.
+- Previously used search/filter combinations reuse the cached paging flow.
+- Search, status, and gender filters are passed together to the repository.
+- Different search and filter combinations correctly create/use their corresponding paging flows.
+
+#### CharacterRepository
+
+The repository is tested using **MockWebServer** to verify the actual Retrofit request and response mapping.
+
+We test:
+
+- Multiple episode IDs are combined into a single batch API request.
+- The returned episode DTOs are correctly mapped into `EpisodeModel` objects.
+
+### What We Decided Not to Test
+
+#### Compose UI Tests
+
+We did not add Compose UI tests. The UI was manually verified for the required flows, including search, filtering, pagination, loading states, empty results, error states, retry, pull-to-refresh, and navigation to the detail screen.
+
+The core behaviour behind these interactions is covered through ViewModel, PagingSource, and Repository tests.
+
+#### End-to-End Tests
+
+We did not add full end-to-end tests against the live Rick and Morty API. Such tests would depend on an external network service and could become unreliable because of network availability or API rate limits.
+
+Instead, network behaviour is tested in isolation using MockWebServer.
+
+#### Live API Integration Tests
+
+We did not make automated tests depend on the real API. MockWebServer provides deterministic responses, making the tests faster and reliable when run on a clean checkout.
