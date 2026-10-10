@@ -31,6 +31,8 @@ class CharacterListViewModel(
     private val pagingCache =
         mutableMapOf<CharacterFilter, Flow<PagingData<CharacterModel>>>()
 
+    private val num: Long = 500
+
     private val filters = combine(
         _searchQuery,
         _status,

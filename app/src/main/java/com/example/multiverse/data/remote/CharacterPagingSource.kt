@@ -2,6 +2,7 @@ package com.example.multiverse.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.multiverse.data.local.KeyValueCache
 import com.example.multiverse.data.mapper.toDomain
 import com.example.multiverse.domain.model.CharacterModel
 import retrofit2.HttpException
@@ -11,7 +12,8 @@ class CharacterPagingSource(
     private val api: RickAndMortyApi,
     private val name: String?,
     private val status: String?,
-    private val gender: String?
+    private val gender: String?,
+    private val cache: KeyValueCache? = null
 ) : PagingSource<Int, CharacterModel>() {
 
     override suspend fun load(
@@ -19,6 +21,7 @@ class CharacterPagingSource(
     ): LoadResult<Int, CharacterModel> {
 
         val page = params.key ?: 1
+        val cacheKey = "characters:p:$page:n:${name.orEmpty()}:s:${status.orEmpty()}:g:${gender.orEmpty()}"
 
         return try {
 
@@ -29,8 +32,11 @@ class CharacterPagingSource(
                 gender = gender
             )
 
+            val characters = response.results.map { it.toDomain() }
+            cache?.put(cacheKey, characters)
+
             LoadResult.Page(
-                data = response.results.map { it.toDomain() },
+                data = characters,
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.info.next == null) {
                     null
@@ -41,11 +47,28 @@ class CharacterPagingSource(
 
         } catch (e: IOException) {
 
-            LoadResult.Error(e)
+            val cachedData = cache?.get<List<CharacterModel>>(cacheKey)
+            if (cachedData != null) {
+                LoadResult.Page(
+                    data = cachedData,
+                    prevKey = if (page == 1) null else page - 1,
+                    nextKey = null
+                )
+            } else {
+                LoadResult.Error(e)
+            }
 
         } catch (e: HttpException) {
 
-            LoadResult.Error(e)
+            if (e.code() == 404) {
+                LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = null,
+                    nextKey = null
+                )
+            } else {
+                LoadResult.Error(e)
+            }
 
         }
     }

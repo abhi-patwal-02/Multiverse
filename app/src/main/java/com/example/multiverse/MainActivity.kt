@@ -15,7 +15,7 @@ import com.example.multiverse.ui.theme.MultiverseTheme
 class MainActivity : ComponentActivity() {
 
     private val appContainer by lazy {
-        AppContainer()
+        AppContainer(applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
